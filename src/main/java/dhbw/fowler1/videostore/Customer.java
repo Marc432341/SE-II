@@ -1,7 +1,6 @@
 package dhbw.fowler1.videostore;
-
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.Iterator;
+import java.util.LinkedList;
 /**
  * Die Klasse Customer modelliert einen Kunden.
  * Ein Kunde kann Filme ausleihen.
@@ -9,7 +8,7 @@ import java.util.Vector;
  */
 public class Customer {
     private String _name;
-    private Vector _rentals = new Vector();
+    private LinkedList<Rental> _rentals = new LinkedList<Rental>();
 /** 
  * Der Konstruktor erstellt einen Kunden mit dem übergebenen Namen
  * @param name 
@@ -24,29 +23,7 @@ public class Customer {
  * @return Der Auszug des Kunden
  */
     public String statement() {
-        double totalAmount = 0;
-        int frequentRenterPoints = 0;
-        Enumeration rentals = _rentals.elements();
-        String result = "Rental Record for " + getName() + "\n";
-        while (rentals.hasMoreElements()) {
-            Rental each = (Rental) rentals.nextElement();
-            double thisAmount = each.calculateAmount();
-
-            // add frequent renter points
-            frequentRenterPoints ++;
-            // add bonus for a two day new release rental
-            if ((each.getMovie() instanceof MovieNewRelease) &&
-                    each.getDaysRented() > 1) frequentRenterPoints ++;
-            //show figures for this rental
-            result += "\t" + each.getMovie().getTitle()+ "\t" +
-                    String.valueOf(thisAmount) + "\n";
-            totalAmount += thisAmount;
-        }
-        //add footer lines
-        result += "Amount owed is " + String.valueOf(totalAmount) + "\n";
-        result += "You earned " + String.valueOf(frequentRenterPoints) +
-                " frequent renter points";
-        return result;
+        return new TextStatement().value(this);
     }
 
 /**
@@ -54,7 +31,15 @@ public class Customer {
  * @param arg Die Ausleihe, die hinzugefügt werden soll.
  */
     public void addRental(Rental arg) {
-        _rentals.addElement(arg);
+        _rentals.add(arg);
+    }
+    /**
+     * Die Methode getRentals gibt die Ausleihen für einen 
+     * Kunden zurück
+     * @return Ausleihen
+     */
+    public LinkedList<Rental> getRentals() {
+        return _rentals;
     }
 /**
  * Die Methode getName gibt den Namen des Kunden zurück.
@@ -63,4 +48,40 @@ public class Customer {
     public String getName() {
         return _name;
     }
+    /**
+     * Die getTotalCharge gibt den gesamten Ausleihepreis zurück
+     * @return Gesamter Ausleihpreis
+     */
+    public double getTotalCharge() {
+        double result = 0;
+        Iterator rentals = _rentals.iterator();
+        while (rentals.hasNext()) {
+            Rental each = (Rental) rentals.next();
+            result += each.calculateAmount();
+        }
+    return result;
+    }
+    /**
+     * Die Methode getTotalFrequentRenterPoints gibt die
+     * gesamnten Ausleihepunkte zurück.
+     * @return die gesamten Ausleihepunkte
+     */
+    public int getTotalFrequentRenterPoints(){
+        int result = 0;
+        Iterator rentals = _rentals.iterator();
+        while (rentals.hasNext()) {
+            Rental each = (Rental) rentals.next();
+            result += each.calculateRentalPoints();
+        }
+    return result;
+    }
+    /**
+     * Die Methode htmlStatement gibt eine HTML-Darstellung
+     * des Kunden zurück.
+     * @return Die HTML-Darstellung des Kundens
+     */
+    public String htmlStatement() {
+        return new HtmlStatement().value(this);
+    }
 }
+

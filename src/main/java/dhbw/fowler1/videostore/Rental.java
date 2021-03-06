@@ -37,10 +37,18 @@ public class Rental {
     /**
  * Die Methode calculateAmount berechnet die Kosten für die Ausleihe
  * anhand der übergebenen Ausleihe und gibt den Preis zurück.
- * @param rental Ausleihe
  * @return Kosten für die Ausleihe
  */
     public double calculateAmount() {
         return _movie.getPrice(_daysRented);
+    }
+    /**
+     * Die Methode calculateRentalPoints berechnet die Anzahl an
+     * Punkten, die für eine Ausleihe dem Benutzer gutgeschrieben werden.
+     * @return die Anzahl an erhaltenen Punkten
+     */
+    public int calculateRentalPoints() {
+        return (_movie instanceof MovieNewRelease && _daysRented > 1) ?
+                2 : 1;
     }
 }
