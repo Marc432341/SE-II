@@ -2,40 +2,35 @@ package dhbw.fowler1.videostore;
 
 import java.util.Enumeration;
 import java.util.Vector;
-
+/**
+ * Die Klasse Customer modelliert einen Kunden.
+ * Ein Kunde kann Filme ausleihen.
+ * 
+ */
 public class Customer {
     private String _name;
     private Vector _rentals = new Vector();
-
+/** 
+ * Der Konstruktor erstellt einen Kunden mit dem übergebenen Namen
+ * @param name 
+ */
     public Customer(String name) {
         _name = name;
     }
-
+/**
+ * Die Methode statement erstellt einen Auszug für einen Kunden
+ * mit den ausgeliehenen Filmen, den Name des Kundens und seinen
+ * Bonuspunkten
+ * @return Der Auszug des Kunden
+ */
     public String statement() {
         double totalAmount = 0;
         int frequentRenterPoints = 0;
         Enumeration rentals = _rentals.elements();
         String result = "Rental Record for " + getName() + "\n";
         while (rentals.hasMoreElements()) {
-            double thisAmount = 0;
             Rental each = (Rental) rentals.nextElement();
-
-            // determine amount for each line
-            switch (each.getMovie().getPriceCode()) {
-                case Movie.REGULAR:
-                    thisAmount += 2;
-                    if (each.getDaysRented() > 2)
-                        thisAmount += (each.getDaysRented() - 2) * 1.5;
-                    break;
-                case Movie.NEW_RELEASE:
-                    thisAmount += each.getDaysRented() * 3;
-                    break;
-                case Movie.CHILDRENS:
-                    thisAmount += 1.5;
-                    if (each.getDaysRented() > 3)
-                        thisAmount += (each.getDaysRented() - 3) * 1.5;
-                    break;
-            }
+            double thisAmount = calculateAmount(each);
 
             // add frequent renter points
             frequentRenterPoints ++;
@@ -54,11 +49,43 @@ public class Customer {
                 " frequent renter points";
         return result;
     }
-
+/**
+ * Die Methode calculateAmount berechnet die Kosten für die Ausleihe
+ * anhand der übergebenen Ausleihe und gibt den Preis zurück.
+ * @param rental Ausleihe
+ * @return Kosten für die Ausleihe
+ */
+    private double calculateAmount(Rental rental) {
+        double amount = 0;
+        // determine amount for each line
+        switch (rental.getMovie().getPriceCode()) {
+            case Movie.REGULAR:
+                amount += 2;
+                if (rental.getDaysRented() > 2)
+                    amount += (rental.getDaysRented() - 2) * 1.5;
+                break;
+            case Movie.NEW_RELEASE:
+                amount += rental.getDaysRented() * 3;
+                break;
+            case Movie.CHILDRENS:
+                amount += 1.5;
+                if (rental.getDaysRented() > 3)
+                    amount += (rental.getDaysRented() - 3) * 1.5;
+                break;
+        }
+        return amount;
+    }
+/**
+ * Die Methode addRental fügt einem Kunde eine neue Ausleihe hinzu.
+ * @param arg Die Ausleihe, die hinzugefügt werden soll.
+ */
     public void addRental(Rental arg) {
         _rentals.addElement(arg);
     }
-
+/**
+ * Die Methode getName gibt den Namen des Kunden zurück.
+ * @return Der Name des Kundens
+ */
     public String getName() {
         return _name;
     }
