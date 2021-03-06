@@ -1,27 +1,28 @@
 package dhbw.fowler1.videostore;
-
-public class Movie {
-    public static final int CHILDRENS = 2;
-    public static final int REGULAR = 0;
-    public static final int NEW_RELEASE = 1;
+/**
+ * Die Klasse Movie repräsentiert einen Film.
+ * Ein Film hat einen Titel und einen Preiscode.
+ * 
+ */
+public abstract class Movie {
 
     private String _title;
-    private int _priceCode;
-
-    public Movie(String title, int priceCode) {
+/**
+ * Der Konstruktor erstellt einen neuen Film mit übergebenen 
+ * Titel und dem Preiscode.
+ * @param title Der Titel des Films
+ * @param priceCode Der Preiscode des Films
+ */
+    public Movie(String title) {
         _title = title;
-        _priceCode = priceCode;
     }
-
-    public int getPriceCode() {
-        return _priceCode;
-    }
-
-    public void setPriceCode(int _priceCode) {
-        this._priceCode = _priceCode;
-    }
-
+/**
+ * Die Methode getTitle gibt den Titel des Films zurück.
+ * @return Titel des Films
+ */
     public String getTitle() {
         return _title;
     }
+    public abstract double getPrice(int rentalDays);
+    
 }

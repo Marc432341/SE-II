@@ -16,7 +16,7 @@ public class CustomerTest {
 
     @Test
     public void statementRentRegularMovieForOneDay() throws Exception {
-        customer.addRental(getRental("Killer Klowns from Outer Space", Movie.REGULAR, 1));
+        customer.addRental(getRentalRegular("Killer Klowns from Outer Space", 1));
 
         String expected = "Rental Record for Arthur Dent\n" +
                 "\tKiller Klowns from Outer Space\t2.0\n" +
@@ -27,7 +27,7 @@ public class CustomerTest {
 
     @Test
     public void statementRentNewReleaseMovieForOneDay() throws Exception {
-        customer.addRental(getRental("Awesome New Release", Movie.NEW_RELEASE, 1));
+        customer.addRental(getRentalNewRelease("Awesome New Release", 1));
 
         String expected = "Rental Record for Arthur Dent\n" +
                 "\tAwesome New Release\t3.0\n" +
@@ -38,7 +38,7 @@ public class CustomerTest {
 
     @Test
     public void statementRentChildrensMovieForOneDay() throws Exception {
-        customer.addRental(getRental("Cars", Movie.CHILDRENS, 1));
+        customer.addRental(getRentalChildren("Cars", 1));
 
         String expected = "Rental Record for Arthur Dent\n" +
                 "\tCars\t1.5\n" +
@@ -49,7 +49,7 @@ public class CustomerTest {
 
     @Test
     public void statementRentChildrensMovieForFourDays() throws Exception {
-        customer.addRental(getRental("Cars", Movie.CHILDRENS, 4));
+        customer.addRental(getRentalChildren("Cars", 4));
 
         String expected = "Rental Record for Arthur Dent\n" +
                 "\tCars\t3.0\n" +
@@ -60,7 +60,7 @@ public class CustomerTest {
 
     @Test
     public void statementRentRegularMovieForThreeDays() throws Exception {
-        customer.addRental(getRental("Killer Klowns from Outer Space", Movie.REGULAR, 3));
+        customer.addRental(getRentalRegular("Killer Klowns from Outer Space", 3));
 
         String expected = "Rental Record for Arthur Dent\n" +
                 "\tKiller Klowns from Outer Space\t3.5\n" +
@@ -71,7 +71,7 @@ public class CustomerTest {
 
     @Test
     public void statementRentNewReleaseMovieForTwoDays() throws Exception {
-        customer.addRental(getRental("Awesome New Release", Movie.NEW_RELEASE, 2));
+        customer.addRental(getRentalNewRelease("Awesome New Release", 2));
 
         String expected = "Rental Record for Arthur Dent\n" +
                 "\tAwesome New Release\t6.0\n" +
@@ -83,9 +83,9 @@ public class CustomerTest {
     @Test
     public void rentOneOfEachTypeForFourDays() throws Exception {
         int daysRented = 4;
-        customer.addRental(getRental("Killer Klowns from Outer Space", Movie.REGULAR, daysRented));
-        customer.addRental(getRental("Awesome New Release", Movie.NEW_RELEASE, daysRented));
-        customer.addRental(getRental("Cars", Movie.CHILDRENS, daysRented));
+        customer.addRental(getRentalRegular("Killer Klowns from Outer Space", daysRented));
+        customer.addRental(getRentalNewRelease("Awesome New Release", daysRented));
+        customer.addRental(getRentalChildren("Cars", daysRented));
 
         String expected = "Rental Record for Arthur Dent\n" +
                 "\tKiller Klowns from Outer Space\t5.0\n" +
@@ -96,8 +96,17 @@ public class CustomerTest {
         assertEquals(expected, customer.statement());
     }
 
-    private Rental getRental(String title, int priceCode, int daysRented) {
-        Movie movie = new Movie(title, priceCode);
+    private Rental getRentalNewRelease(String title, int daysRented) {
+        Movie movie = new MovieNewRelease(title);
         return new Rental(movie, daysRented);
     }
+    private Rental getRentalChildren(String title, int daysRented) {
+        Movie movie = new MovieChildren(title);
+        return new Rental(movie, daysRented);
+    }
+    private Rental getRentalRegular(String title, int daysRented) {
+        Movie movie = new MovieRegular(title);
+        return new Rental(movie, daysRented);
+    }
+    
 }

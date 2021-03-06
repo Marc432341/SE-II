@@ -30,14 +30,13 @@ public class Customer {
         String result = "Rental Record for " + getName() + "\n";
         while (rentals.hasMoreElements()) {
             Rental each = (Rental) rentals.nextElement();
-            double thisAmount = calculateAmount(each);
+            double thisAmount = each.calculateAmount();
 
             // add frequent renter points
             frequentRenterPoints ++;
             // add bonus for a two day new release rental
-            if ((each.getMovie().getPriceCode() == Movie.NEW_RELEASE) &&
+            if ((each.getMovie() instanceof MovieNewRelease) &&
                     each.getDaysRented() > 1) frequentRenterPoints ++;
-
             //show figures for this rental
             result += "\t" + each.getMovie().getTitle()+ "\t" +
                     String.valueOf(thisAmount) + "\n";
@@ -49,32 +48,7 @@ public class Customer {
                 " frequent renter points";
         return result;
     }
-/**
- * Die Methode calculateAmount berechnet die Kosten für die Ausleihe
- * anhand der übergebenen Ausleihe und gibt den Preis zurück.
- * @param rental Ausleihe
- * @return Kosten für die Ausleihe
- */
-    private double calculateAmount(Rental rental) {
-        double amount = 0;
-        // determine amount for each line
-        switch (rental.getMovie().getPriceCode()) {
-            case Movie.REGULAR:
-                amount += 2;
-                if (rental.getDaysRented() > 2)
-                    amount += (rental.getDaysRented() - 2) * 1.5;
-                break;
-            case Movie.NEW_RELEASE:
-                amount += rental.getDaysRented() * 3;
-                break;
-            case Movie.CHILDRENS:
-                amount += 1.5;
-                if (rental.getDaysRented() > 3)
-                    amount += (rental.getDaysRented() - 3) * 1.5;
-                break;
-        }
-        return amount;
-    }
+
 /**
  * Die Methode addRental fügt einem Kunde eine neue Ausleihe hinzu.
  * @param arg Die Ausleihe, die hinzugefügt werden soll.
